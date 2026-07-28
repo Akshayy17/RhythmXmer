@@ -1,0 +1,1 @@
+pip install torch transformers librosa pandas numpy scipy tqdm soundfile
