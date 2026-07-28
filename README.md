@@ -25,12 +25,9 @@ recording, it predicts:
 | `eval.py` | Segment-level and recording-level evaluation, sam event metrics |
 | `infer.py` | Runs the trained model end-to-end on a single audio file |
 
-## Setup
-
-```bash
-pip install torch transformers librosa pandas numpy scipy tqdm soundfile
-```
 
 
 ## To Infer
+```bash
 python infer.py /path/to/recording.wav --ckpt /path/to/model.pt --sam-threshold 0.5
+```
