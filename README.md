@@ -20,7 +20,6 @@ recording, it predicts:
 | `extract_embeddings.py` | Preprocesses raw audio into cached MERT embeddings |
 | `dataset.py` | PyTorch `Dataset`, label completion logic, batch collation |
 | `model.py` | Transformer-based multi-task model |
-| `model_gru.py` | GRU-based multi-task model (architecture ablation) |
 | `train.py` | Training loop and masked multi-task loss |
 | `eval.py` | Segment-level and recording-level evaluation, sam event metrics |
 | `infer.py` | Runs the trained model end-to-end on a single audio file |
