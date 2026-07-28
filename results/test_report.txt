@@ -1,0 +1,72 @@
+==============================================================================
+EVALUATION REPORT 
+==============================================================================
+
+This report separates two evaluation granularities:
+  CHUNK-level  : each 60s segment scored independently (no aggregation)
+  RECORDING-level : predictions from all segments of a recording are
+                    aggregated (probability-averaged for taal/scale,
+                    median for tempo/period) into one prediction per
+                    recording.
+
+------------------------------------------------------------------------------
+1. HEADLINE RESULTS
+------------------------------------------------------------------------------
+Metric                      Chunk-level       Recording-level   
+Taal accuracy               87.34%            86.90%            
+Scale accuracy              98.19% (n=1656)   98.37% (n=184)    
+Tempo MAE (BPM)             21.78             20.76             
+Period MAE (sec)            2.14              2.25              
+Sam frame F1                60.45%            60.86%            
+
+Sam event F1 @ +-0.5s : 78.10%  (P=83.45%, R=73.40%, best threshold=0.60)
+Sam event F1 @ +-1.0s : 82.53%  (P=84.02%, R=81.08%, best threshold=0.10)
+(For reference, at the fixed frame-level threshold=0.5: event F1 @0.5s=78.10%, @1.0s=82.08%)
+
+
+------------------------------------------------------------------------------
+2. TEMPO / PERIOD — DIRECTLY-ANNOTATED vs. FORMULA-COMPLETED
+------------------------------------------------------------------------------
+Tempo and cycle period are mutually derivable via the beats-per-cycle
+relationship (see Methodology). Missing labels are completed using 
+this formula and used identically during training.
+
+
+  Tempo MAE  -- real: 21.34 (n=1656)   derived: 22.98 (n=603)
+  Period MAE -- real: 5.95 (n=603)   derived: 0.76 (n=1656)
+
+
+
+------------------------------------------------------------------------------
+3. PER-TAAL BREAKDOWN (chunk-level)
+------------------------------------------------------------------------------
+Taal            TaalAcc   ScaleAcc    TempoMAE(R/D)       PeriodMAE(R/D)      SamF1     
+addhateentaal   97.35%    100.00%     10.82/0.00          0.00/0.93           --        
+bhajani         96.76%    100.00%     16.91/0.00          0.00/0.27           --        
+dadra           87.33%    97.33%      20.00/0.00          0.00/0.45           --        
+deepchandi      80.00%    87.50%      24.67/0.00          0.00/2.40           --        
+ektaal          91.32%    100.00%     21.10/11.81         8.94/2.46           66.13%    
+jhaptaal        86.25%    92.31%      16.19/28.09         2.71/0.45           52.17%    
+keherwa         77.33%    100.00%     22.52/0.00          0.00/0.61           --        
+rupak           90.18%    100.00%     16.93/15.40         14.42/0.70          44.17%    
+teentaal        86.93%    100.00%     35.67/38.04         1.86/1.25           60.84%    
+
+
+------------------------------------------------------------------------------
+4. PER-SOURCE BREAKDOWN (chunk-level)
+------------------------------------------------------------------------------
+Source          Chunks    TaalAcc   TempoMAE    PeriodMAE   SamF1     
+hmr             90        66.67%    26.20       7.12        57.14%    
+kaggle          585       100.00%   0.00        0.00        --        
+saraga_hind     513       91.81%    22.42       5.74        61.23%    
+yt              1656      82.61%    21.34       0.76        --        
+
+
+------------------------------------------------------------------------------
+5. SAM EVENT DETECTION -- THRESHOLD SWEEP SUMMARY
+------------------------------------------------------------------------------
+Best operating point per tolerance (F1-maximizing threshold, swept over
+[0.10, 0.90] in steps of 0.05):
+
+  tol_0.5s   threshold=0.60  F1=78.10%  P=83.45%  R=73.40%  (TP=1614, FP=320, FN=585)
+  tol_1.0s   threshold=0.10  F1=82.53%  P=84.02%  R=81.08%  (TP=1783, FP=339, FN=416)
